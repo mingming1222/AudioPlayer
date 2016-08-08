@@ -674,6 +674,25 @@ public class AudioPlayer: NSObject {
             }
         }
     }
+    
+    
+    public func replaceItemAtIndex(index: Int, item: AudioItem) {
+        self.enqueuedItems?[index] = AudioQueueItem(position: index, item: item)
+        if item.trackNumber == currentItem?.trackNumber {
+            let cip = currentItemProgression
+            let item = AVPlayerItem(URL: item.mediumQualityURL.URL)
+
+            qualityIsBeingChanged = true
+            player?.replaceCurrentItemWithPlayerItem(item)
+            if let cip = cip {
+                //We can't call self.seekToTime in here since the player is loading a new
+                //item and `cip` is probably not in the seekableTimeRanges.
+                player?.seekToTime(CMTime(seconds: cip, preferredTimescale: 1000000000))
+            }
+        }
+    }
+
+
 
     /**
     Resume the player.
