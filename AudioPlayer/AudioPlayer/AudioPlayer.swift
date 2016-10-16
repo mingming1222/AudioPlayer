@@ -697,14 +697,14 @@ open class AudioPlayer: NSObject {
         self.enqueuedItems?[index] = AudioQueueItem(position: index, item: item)
         if item.trackNumber == currentItem?.trackNumber {
             let cip = currentItemProgression
-            let item = AVPlayerItem(URL: item.mediumQualityURL.URL)
+            let item = AVPlayerItem(url: item.mediumQualityURL.URL)
 
             qualityIsBeingChanged = true
-            player?.replaceCurrentItemWithPlayerItem(item)
+            player?.replaceCurrentItem(with: item)
             if let cip = cip {
                 //We can't call self.seekToTime in here since the player is loading a new
                 //item and `cip` is probably not in the seekableTimeRanges.
-                player?.seekToTime(CMTime(seconds: cip, preferredTimescale: 1000000000))
+                player?.seek(to: CMTime(seconds: cip, preferredTimescale: 1000000000))
             }
         }
     }
